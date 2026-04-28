@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/mansournorouzi-amazon-sp-mcp-badge.png)](https://mseep.ai/app/mansournorouzi-amazon-sp-mcp)
+
 # Amazon SP-API MCP Server
 
 A Model Context Protocol (MCP) server that connects Claude to Amazon Seller Central via the SP-API. Enables natural language queries for sales data, inventory, reports, fees, reimbursements, and analytics.
