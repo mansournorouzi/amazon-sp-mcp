@@ -170,10 +170,14 @@ export class SPAPIClient {
         );
       }
 
-      // Client errors
+      // Client errors. Amazon returns errors[] with code + message + (often) details;
+      // the details field names the offending argument, so surface it instead of dropping it.
       if (status && status >= 400) {
-        const errorMessage = data?.errors?.[0]?.message || data?.message || error.message;
-        const errorCode = data?.errors?.[0]?.code || 'CLIENT_ERROR';
+        const apiError = data?.errors?.[0];
+        const baseMessage = apiError?.message || data?.message || error.message;
+        const details = apiError?.details;
+        const errorMessage = details ? `${baseMessage} (${details})` : baseMessage;
+        const errorCode = apiError?.code || 'CLIENT_ERROR';
         return new SPAPIError(errorMessage, status, errorCode, false);
       }
 

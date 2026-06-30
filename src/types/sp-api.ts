@@ -260,6 +260,11 @@ export interface CreateReportResponse {
   reportId: string;
 }
 
+export interface GetReportsResponse {
+  reports: Report[];
+  nextToken?: string;
+}
+
 export interface GetReportResponse {
   reportId: string;
   reportType: string;
@@ -313,6 +318,7 @@ export const REPORT_TYPES = {
 
   // Settlement Reports
   SETTLEMENT_FLAT_FILE: 'GET_V2_SETTLEMENT_REPORT_DATA_FLAT_FILE',
+  SETTLEMENT_FLAT_FILE_V2: 'GET_V2_SETTLEMENT_REPORT_DATA_FLAT_FILE_V2',
   SETTLEMENT_XML: 'GET_V2_SETTLEMENT_REPORT_DATA_XML',
 
   // Sales & Traffic Reports

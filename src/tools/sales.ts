@@ -137,11 +137,14 @@ export const salesTools = [
       const metrics = response.payload || [];
 
       // Calculate totals
+      // NOTE: the Sales API returns totalSales.amount as a STRING. Adding it to a number
+      // with `+` performs string concatenation, which makes totals.totalSales a string and
+      // breaks the .toFixed() calls below. Coerce each amount to a number before summing.
       const totals = metrics.reduce(
         (acc, m) => ({
           totalUnits: acc.totalUnits + m.unitCount,
           totalOrders: acc.totalOrders + m.orderCount,
-          totalSales: acc.totalSales + m.totalSales.amount,
+          totalSales: acc.totalSales + Number(m.totalSales?.amount ?? 0),
         }),
         { totalUnits: 0, totalOrders: 0, totalSales: 0 }
       );
@@ -220,7 +223,13 @@ export const salesTools = [
       let page = 0;
 
       const startDateTime = `${input.startDate}T00:00:00Z`;
-      const endDateTime = `${input.endDate}T23:59:59Z`;
+      // Orders v0 rejects a CreatedBefore that is not at least 2 minutes in the past, so an end date
+      // of today (whose 23:59:59 is in the future) would 400. Clamp it to now minus 2 minutes.
+      let endDateTime = `${input.endDate}T23:59:59Z`;
+      const maxBefore = new Date(Date.now() - 2 * 60 * 1000);
+      if (new Date(endDateTime) > maxBefore) {
+        endDateTime = maxBefore.toISOString();
+      }
 
       do {
         const queryParams: Record<string, unknown> = {

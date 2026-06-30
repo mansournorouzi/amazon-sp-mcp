@@ -77,6 +77,7 @@ export const SP_API_RATE_LIMITS: Record<string, RateLimitConfig> = {
 
   // Reports API
   createReport: { requestsPerSecond: 0.0167, burstSize: 15 },
+  getReports: { requestsPerSecond: 0.0222, burstSize: 10 },
   getReport: { requestsPerSecond: 2, burstSize: 15 },
   getReportDocument: { requestsPerSecond: 0.0222, burstSize: 15 },
 
