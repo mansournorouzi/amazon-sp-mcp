@@ -152,10 +152,19 @@ export class SPAPIClient {
       }
 
       if (status === 403) {
+        // Keep the generic hint, but append Amazon's own message: a missing app role,
+        // an unauthorized marketplace and a revoked grant all return 403, and only the
+        // errors[] text tells them apart.
+        const apiError = data?.errors?.[0];
+        const amazonMessage = apiError?.message || data?.message;
+        const details = apiError?.details;
+        const suffix = amazonMessage
+          ? ` Amazon says: ${amazonMessage}${details ? ` (${details})` : ''}`
+          : '';
         return new SPAPIError(
-          'Access forbidden. Please verify your seller permissions.',
+          `Access forbidden. Please verify your seller permissions.${suffix}`,
           403,
-          'FORBIDDEN',
+          apiError?.code || 'FORBIDDEN',
           false
         );
       }
